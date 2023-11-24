@@ -8,7 +8,8 @@ import {
   isFigmaComponentWithOptions,
 } from "../types";
 
-const FIGMA_TOKEN = import.meta.env.STORYBOOK_FIGMA_ACCESS_TOKEN;
+const FIGMA_TOKEN = process.env.STORYBOOK_FIGMA_ACCESS_TOKEN;
+
 const figmaClient = Figma.Client({ personalAccessToken: FIGMA_TOKEN });
 
 export async function getFigmaImage(
