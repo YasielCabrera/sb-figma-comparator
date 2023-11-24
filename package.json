@@ -1,6 +1,6 @@
 {
   "name": "sb-figma-comparator",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "Overlay the Figma design over the stories to detect irregularities in the implemented UI",
   "keywords": [
     "figma storybook comparator design",
