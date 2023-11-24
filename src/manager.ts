@@ -1,10 +1,6 @@
 import { addons, types } from "@storybook/manager-api";
-import { ADDON_ID, TAB_ID, TOOL_ID } from "./constants";
-// import { Tool } from "./Tool";
-// import { Panel } from "./Panel";
-// import { Tab } from "./Tab";
+import { ADDON_ID, TOOL_ID } from "./constants";
 import { FigmaComparatorTool } from "./FigmaComparatorTool";
-import { Tab } from "./Tab";
 
 /**
  * Note: if you want to use JSX in this file, rename it to `manager.tsx`
