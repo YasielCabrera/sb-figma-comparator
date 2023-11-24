@@ -51,3 +51,14 @@ export const Small: Story = {
     label: "Button",
   },
 };
+
+Primary.parameters = {
+  figma: {
+    component: {
+      0: {
+        component:
+          "https://www.figma.com/file/pyaYEjcwF2b5uf9y0vIfIy/SES-Dashboard?type=design&node-id=13334-156137&mode=dev",
+      },
+    },
+  },
+};

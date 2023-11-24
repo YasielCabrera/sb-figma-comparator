@@ -1,92 +1,125 @@
-# Storybook Addon Storybook-Figma comparator
-Overlay the Figma design over the stories to detect irregularities in the implementated UI
+# Storybook Addon Figma Comparator
+
+Compare components with Figma Components
+
+## How to install
+
+```cmd
+npm install --dev storybook-addon-figma-comparator
+
+# or
+
+yarn add -D storybook-addon-figma-comparator
+```
+
+```js
+// .storybook/main.js
+
+// ...
+module.exports = {
+  // ...
+  addons: [
+    // ...
+    'storybook-addon-figma-comparator',
+  ],
+}
+```
+
+You need to add your Figma token with access to the Figma files to the environment variable `STORYBOOK_FIGMA_ACCESS_TOKEN`.
+
+## How to use
+
+Basic usage:
+
+```js
+// ...
+export default {
+  title: "Example/Button",
+  component: Button,
+  // ...
+}
+
+const Template = (args) => <Button {...args} />;
+
+export const Primary = Template.bind({});
+Primary.args = {
+  primary: true,
+  label: "Button",
+};
+Primary.parameters = {
+  figma: {
+    component:
+      "https://www.figma.com/file/ZZZ/file-name?node-id=XXX%3AYYY",
+  } as FigmaParams,
+};
+```
+
+## `Figma` Parameter
+
+```ts
+figma = {
+  component: FigmaComponent | FigmaComponentSet;
+  options?: {
+    style?: React.CSSProperties;
+    componentStyle?: React.CSSProperties;
+    opacity?: number;
+  };
+}
+
+FigmaComponentNode = {
+  fileId: string;
+  nodeId: string;
+}
+
+FigmaComponent = string | FigmaComponentNode;
+
+FigmaComponentSet = {
+  [key: number]: FigmaComponent;
+};
+```
+
+The `component` can be a `string` indicating the URL of the Figma component, a Figma node indicating the file id and the node id (component id) or it can be a Component set in cases where the component changes in different viewpoints.
+
+### Component set example
+
+```js
+// ...
+Primary.parameters = {
+  figma: {
+    component: {
+        0: node1,
+        768: node2,
+        1440: node3
+    }
+  },
+};
+
+// the nodes can have any of the following formats:
+node1 = "https://www.figma.com/file/ZZZ/file-name?node-id=XXX%3AYYY";
+node2 = {
+  fileId: "ZZZ",
+  nodeId: "XXX:YYY"
+}
+node3 = {
+  // the component can be a string or a FigmaComponentNode like `node1` or `node2`
+  component: "https://www.figma.com/file/ZZZ/file-name?node-id=XXX%3AYYY",
+  // this options will override the component `options`
+  options: {
+    style: {
+      // figma component options
+      padding: 12,
+    },
+    componentStyle: {
+      // story component options. This way you can set a fixed width to match exactly with the Figma image
+      width: 650,
+    },
+  }
+}
+```
+
+In the previous example, the Figma comparator will fetch the Figma image of the component if the viewport width is between 0 and 767, the image from node 2 if the viewport width is between 768 and 1439 and the image from the node 3 if the viewport width is greater than 1440.
 
 ### Development scripts
 
 - `yarn start` runs babel in watch mode and starts Storybook
 - `yarn build` build and package your addon code
-
-### Switch from TypeScript to JavaScript
-
-Don't want to use TypeScript? We offer a handy eject command: `yarn eject-ts`
-
-This will convert all code to JS. It is a destructive process, so we recommended running this before you start writing any code.
-
-## What's included?
-
-![Demo](https://user-images.githubusercontent.com/42671/107857205-e7044380-6dfa-11eb-8718-ad02e3ba1a3f.gif)
-
-The addon code lives in `src`. It demonstrates all core addon related concepts. The three [UI paradigms](https://storybook.js.org/docs/react/addons/addon-types#ui-based-addons)
-
-- `src/Tool.tsx`
-- `src/Panel.tsx`
-- `src/Tab.tsx`
-
-Which, along with the addon itself, are registered in `src/manager.ts`.
-
-Managing State and interacting with a story:
-
-- `src/withGlobals.ts` & `src/Tool.tsx` demonstrates how to use `useGlobals` to manage global state and modify the contents of a Story.
-- `src/withRoundTrip.ts` & `src/Panel.tsx` demonstrates two-way communication using channels.
-- `src/Tab.tsx` demonstrates how to use `useParameter` to access the current story's parameters.
-
-Your addon might use one or more of these patterns. Feel free to delete unused code. Update `src/manager.ts` and `src/preview.ts` accordingly.
-
-Lastly, configure you addon name in `src/constants.ts`.
-
-### Metadata
-
-Storybook addons are listed in the [catalog](https://storybook.js.org/addons) and distributed via npm. The catalog is populated by querying npm's registry for Storybook-specific metadata in `package.json`. This project has been configured with sample data. Learn more about available options in the [Addon metadata docs](https://storybook.js.org/docs/react/addons/addon-catalog#addon-metadata).
-
-## Release Management
-
-### Setup
-
-This project is configured to use [auto](https://github.com/intuit/auto) for release management. It generates a changelog and pushes it to both GitHub and npm. Therefore, you need to configure access to both:
-
-- [`NPM_TOKEN`](https://docs.npmjs.com/creating-and-viewing-access-tokens#creating-access-tokens) Create a token with both _Read and Publish_ permissions.
-- [`GH_TOKEN`](https://github.com/settings/tokens) Create a token with the `repo` scope.
-
-Then open your `package.json` and edit the following fields:
-
-- `name`
-- `author`
-- `repository`
-
-#### Local
-
-To use `auto` locally create a `.env` file at the root of your project and add your tokens to it:
-
-```bash
-GH_TOKEN=<value you just got from GitHub>
-NPM_TOKEN=<value you just got from npm>
-```
-
-Lastly, **create labels on GitHub**. You’ll use these labels in the future when making changes to the package.
-
-```bash
-npx auto create-labels
-```
-
-If you check on GitHub, you’ll now see a set of labels that `auto` would like you to use. Use these to tag future pull requests.
-
-#### GitHub Actions
-
-This template comes with GitHub actions already set up to publish your addon anytime someone pushes to your repository.
-
-Go to `Settings > Secrets`, click `New repository secret`, and add your `NPM_TOKEN`.
-
-### Creating a release
-
-To create a release locally you can run the following command, otherwise the GitHub action will make the release for you.
-
-```sh
-yarn release
-```
-
-That will:
-
-- Build and package the addon code
-- Bump the version
-- Push a release to GitHub and npm
-- Push a changelog to GitHub

@@ -1,9 +1,10 @@
 {
   "name": "sb-figma-comparator",
-  "version": "0.0.0",
-  "description": "Overlay the Figma design over the stories to detect irregularities in the implementated UI",
+  "version": "0.1.0",
+  "description": "Overlay the Figma design over the stories to detect irregularities in the implemented UI",
   "keywords": [
-    "figma storybook comparator design", "storybook-addons"
+    "figma storybook comparator design",
+    "storybook-addons"
   ],
   "repository": {
     "type": "git",
@@ -44,7 +45,7 @@
     "build": "tsup",
     "build:watch": "yarn build --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "run-p build:watch 'storybook --quiet'",
+    "start": "run-p build:watch \"storybook --quiet\"",
     "prerelease": "zx scripts/prepublish-checks.mjs",
     "release": "yarn build && auto shipit",
     "eject-ts": "zx scripts/eject-typescript.mjs",
@@ -105,5 +106,9 @@
       "react"
     ],
     "icon": "https://user-images.githubusercontent.com/321738/63501763-88dbf600-c4cc-11e9-96cd-94adadc2fd72.png"
+  },
+  "dependencies": {
+    "@uidotdev/usehooks": "^2.3.1",
+    "figma-js": "^1.16.0"
   }
 }
